@@ -74,7 +74,7 @@ vec4 line3D (vec3 positionOffset, float computedThickness) {
 }
 
 float turb (float angle, float alpha, float scale, float offset) {
-  return alpha * noise3d(vec3(position.x * scale, angle, offset));  
+  return alpha * 2.0 * noise3d(vec3(position.x * scale, angle, offset));  
 } 
 
 void main() {
@@ -82,7 +82,7 @@ void main() {
   float frequencies = analyse(audioTexture, position.x * 0.5 + 0.5);
   #endif
   
-  float pinch = smoothstep(0.0, 0.5, 1.0 - abs(position.x));
+  float pinch = smoothstep(0.1, 0.5, 0.5 - abs(position.x));
   float computedThickness = thickness;
   computedThickness *= pinch;
   
@@ -98,7 +98,7 @@ void main() {
   #endif
   
   float angle = radialOffset * twists + angleOffset;
-  angle += iGlobalTime;
+  angle -= iGlobalTime;
   
   
   float computedRadius = radius;
@@ -107,7 +107,7 @@ void main() {
   #endif
   computedRadius += turb(angle, 0.1, 6.0, iGlobalTime * 0.25);
   computedRadius += turb(angle, 0.1, 2.5, iGlobalTime * 0.5);
-  computedRadius *= pinch;
+  computedRadius *= pinch + 0.1;
   #ifdef HAS_VERTEX_SAMPLER
   computedRadius *= mix(0.65, 1.0, frequencies);
   #endif
