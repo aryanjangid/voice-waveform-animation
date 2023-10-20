@@ -74,7 +74,7 @@ vec4 line3D (vec3 positionOffset, float computedThickness) {
 }
 
 float turb (float angle, float alpha, float scale, float offset) {
-  return alpha * 2.0 * noise3d(vec3(position.x * scale, angle, offset));  
+  return alpha * noise3d(vec3(position.x * scale, angle, offset));  
 } 
 
 void main() {
@@ -107,11 +107,11 @@ void main() {
   #endif
   computedRadius += turb(angle, 0.1, 6.0, iGlobalTime * 0.25);
   computedRadius += turb(angle, 0.1, 2.5, iGlobalTime * 0.5);
-  computedRadius *= pinch + 0.1;
+  computedRadius *= pinch;
   #ifdef HAS_VERTEX_SAMPLER
   computedRadius *= mix(0.65, 1.0, frequencies);
   #endif
-  
+  computedRadius = 0.002;
   vAngle = angle;
   offset.y = cos(angle) * computedRadius;
   offset.z = sin(angle) * computedRadius;

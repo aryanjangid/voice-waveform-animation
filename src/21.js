@@ -10,7 +10,6 @@ const once = require("once");
 const lerp = require("lerp");
 const vignette = require("gl-vignette-background");
 const glslify = require("glslify");
-const audioPlayer = require("web-audio-player");
 const gl = require("webgl-context")({ width: 400, height: 300 });
 const hexRgbByte = require("hex-rgb");
 const createLine = require("./gl/gl-line-3d");
@@ -24,7 +23,7 @@ const isSafari =
 const steps = 200;
 const segments = isSafari ? 50 : 110;
 const radius = 0.01;
-const thickness = 0.01;
+const thickness = 0.001;
 const src = "assets/highroad.mp3";
 
 const defaults = {
@@ -78,7 +77,7 @@ const shader = createShader(
 );
 
 const camera = createCamera({
-  fov: (50 * Math.PI) / 180,
+  fov: (30 * Math.PI) / 180,
   position: [0, 0, 1],
   near: 0.0001,
   far: 10000,
@@ -109,19 +108,28 @@ function start() {
     return desktopOnly();
   }
 
-  const audioContext = new AudioContext();
-  const audio = audioPlayer(src, {
-    context: audioContext,
-    loop: true,
-    buffer: isSafari,
-  });
   const loader = document.querySelector(".loader");
-  audio.once("load", () => {
-    analyser = glAudioAnalyser(gl, audio.node, audioContext);
-    audio.play();
-    app.start();
-    loader.style.display = "none";
-  });
+
+  if (navigator.mediaDevices.getUserMedia) {
+    console.log('getUserMedia supported.');
+
+    const onSuccess = (stream) => {
+      const audioContext = new AudioContext();
+      const source = audioContext.createMediaStreamSource(stream);
+      // source.connect(audioContext.destination);
+      console.log(source)
+      analyser = glAudioAnalyser(gl, source, audioContext);
+      app.start();
+      loader.style.display = "none";
+    }
+
+    let onError = function(err) {
+      console.log('The following error occured: ' + err);
+    }
+    navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then(onSuccess, onError);
+  } else {
+      console.log('getUserMedia not supported on your browser!');
+  }
 }
 
 let time = 0;
