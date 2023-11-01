@@ -103,18 +103,15 @@ void main() {
   
   float computedRadius = radius;
   #ifdef HAS_VERTEX_SAMPLER
-  computedRadius += turb(angle, frequencies * 0.5, 1.0, iGlobalTime * 0.2);
+  computedRadius += turb(angle, frequencies * 1.0, 1.0, iGlobalTime * 0.2);
   #endif
-  computedRadius += turb(angle, 0.1, 6.0, iGlobalTime * 0.25);
-  computedRadius += turb(angle, 0.1, 2.5, iGlobalTime * 0.5);
   computedRadius *= pinch;
   #ifdef HAS_VERTEX_SAMPLER
-  computedRadius *= mix(0.65, 1.0, frequencies);
+  computedRadius *= mix(0.65, 0.5, frequencies);
   #endif
-  computedRadius = 0.002;
   vAngle = angle;
-  offset.y = cos(angle) * computedRadius;
-  offset.z = sin(angle) * computedRadius;
+  offset.y = cos(angle) * computedRadius * 2.0;
+  offset.z = sin(angle) * computedRadius * 2.0;
   
   uvCoords = vec2(position.x * 0.5 + 0.5, sign(direction));
   gl_Position = line3D(offset, computedThickness);  

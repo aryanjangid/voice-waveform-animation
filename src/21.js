@@ -41,11 +41,6 @@ const presets = [
     color3: "#f6ed2d",
     useHue: false,
   },
-  // other styles that look decent
-  // { gradient: [ '#fff', '#4f4f4f' ],
-  //   color: '#000' },
-  // { gradient: [ '#757575', '#1c0216' ],
-  //   color: '#fff' }
 ];
 
 let settings = presets[Math.floor(Math.random() * presets.length)];
