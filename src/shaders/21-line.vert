@@ -105,7 +105,7 @@ void main() {
   #ifdef HAS_VERTEX_SAMPLER
   computedRadius += turb(angle, frequencies * 1.0, 1.0, iGlobalTime * 0.2);
   #endif
-  computedRadius *= pinch + 0.1;
+  computedRadius *= pinch + 0.2;
   #ifdef HAS_VERTEX_SAMPLER
   computedRadius *= mix(0.65, 0.5, frequencies);
   #endif
